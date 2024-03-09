@@ -1,0 +1,25 @@
+class Solution(object):
+    def characterReplacement(self, s, k):
+        """
+        :type s: str
+        :type k: int
+        :rtype: int
+        """
+        left = 0
+        freq= {}
+        length = 0
+
+        for right in range(len(s)):
+            freq[s[right]] = freq.get(s[right], 0) + 1
+
+            window = right-left + 1
+            cost = window - max(freq.values())
+            if cost <= k:
+                length = max(window, length)
+            else:
+                freq[s[left]] -=1
+                left+=1
+
+        return length
+
+            
