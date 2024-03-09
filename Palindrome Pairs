@@ -1,0 +1,39 @@
+class Solution(object):
+    def palindromePairs(self, words):
+        """
+        :type words: List[str]
+        :rtype: List[List[int]]
+        """
+        word_map = {}
+        outcome = []
+
+        for i in range(len(words)):
+            word_map[words[i]] = i
+        
+        for i in range(len(words)):
+            word = words[i]
+            if word == "":
+                for j in range(len(words)):
+                    if self.isPal(words[j],0, len(words[j])-1) and j!=i:
+                        outcome.append([i,j])
+                        outcome.append([j,i])
+                continue
+            if word[::-1] in word_map: #reverse
+                index = word_map[word[::-1]]
+                if(index != i):
+                    outcome.append([i, index]) #other combination is caught later
+            #case for partial palindrome
+            backwards_word = word[::-1]
+            for j in range(1,len(backwards_word)):
+                if backwards_word[j:] in word_map and self.isPal(backwards_word, 0,j-1):
+                    outcome.append([i, word_map[backwards_word[j:]]])
+                if backwards_word[:j] in word_map and self.isPal(backwards_word, j, len(backwards_word)-1):
+                    outcome.append([word_map[backwards_word[:j]], i])
+        return outcome
+
+    def isPal(self, word, left, right):
+            while left < right:
+                if word[left] != word[right]: return False
+                left += 1
+                right -= 1
+            return True
